@@ -1,0 +1,31 @@
+[project]
+name = "hermes-nachalo"
+version = "0.1.0"
+description = "Hermes Agent plugin: pair agents end-to-end from six spoken words; the agent drafts, a person sends."
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+authors = [{ name = "Ramsis Peñaloza" }]
+# Hermes only supports Python 3.14.
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    # PyPI wheel with the Rust binding (handshake + Nachalo Channel), PEP 740 attestations.
+    "nachalo>=0.1.0,<0.2",
+    # Already a Hermes core dependency (pinned 0.28.1); a wide range on purpose so the plugin
+    # never fights Hermes's pin.
+    "httpx>=0.28,<1",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.14,<1"]
+
+[tool.uv]
+exclude-newer = "3 days"
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
+extend-exclude = ["desktop"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]

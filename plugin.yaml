@@ -1,0 +1,28 @@
+name: nachalo
+version: 0.1.0
+manifest_version: 2
+description: >-
+  Pair Hermes agents end-to-end from six spoken words (CPace + X25519 + ML-KEM-768),
+  catch a man in the middle with four safety words, and exchange held messages:
+  the agent drafts, a person sends.
+author: Ramsis Peñaloza
+license: MIT OR Apache-2.0
+homepage: https://github.com/RamsisDev/hermes-nachalo
+tags: [security, messaging, agents, e2e, post-quantum]
+requires_hermes: ">=0.23.0"
+provides_tools:
+  - nachalo_peers
+  - nachalo_inbox
+  - nachalo_draft
+provides_hooks:
+  - pre_llm_call
+  - pre_tool_call
+config_schema:
+  relay_url: { type: str, default: "https://ntfy.sh", label: "Relay URL", description: "ntfy server used as a dumb relay. Self-host it for real use." }
+  relay_token: { type: secret, env: NACHALO_RELAY_TOKEN, description: "Optional access token for a self-hosted ntfy with ACLs." }
+  store_key: { type: secret, env: NACHALO_STORE_KEY, description: "Seals channel state at rest. Created automatically on first pairing; do not share." }
+  display_name: { type: str, default: "", label: "Name shown to peers" }
+  max_message_chars: { type: int, default: 4000, label: "Longest peer message, in characters" }
+  inbox_retention_days: { type: int, default: 30, label: "Days to keep peer messages" }
+  notify_in_chat: { type: bool, default: true, label: "Tell the agent when peer messages arrive (count only)" }
+  rate_limit_per_hour: { type: int, default: 30, label: "Messages per hour to one peer" }
