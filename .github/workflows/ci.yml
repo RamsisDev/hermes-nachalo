@@ -32,9 +32,12 @@ jobs:
           uv run --no-project python -m pytest tests
       - name: Against Hermes (doctor, validate, REST routes)
         run: |
-          git clone --depth 1 https://github.com/NousResearch/hermes-agent /tmp/hermes
-          uv venv --python 3.14 /tmp/hermes/.venv
-          uv pip install --python /tmp/hermes/.venv/bin/python -e /tmp/hermes -r pyproject.toml pytest
+          # Full history and tags, blobs on demand, as the catalog CI does: Hermes reads its
+          # version from the release tags, and a shallow clone reports "unknown".
+          git clone --filter=blob:none https://github.com/NousResearch/hermes-agent /tmp/hermes
+          # uv sync applies Hermes's own uv.lock and [tool.uv] overrides; uv pip install -e does not.
+          uv sync --project /tmp/hermes --frozen --python 3.14
+          uv pip install --python /tmp/hermes/.venv/bin/python -r pyproject.toml pytest
           export HERMES_HOME="$(mktemp -d)"
           /tmp/hermes/.venv/bin/hermes plugins doctor . --ci
           /tmp/hermes/.venv/bin/hermes plugins validate . --install-deps
